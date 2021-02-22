@@ -17,7 +17,7 @@ Terraform module which install `flux` on Kubernetes, using official Helm charts.
 
 ## Output
 
-### is_ready
+### Is_ready
 
 Endpoint used to synchronize other Terraform resources based on this one. Must be used with `depends_on` field.
 

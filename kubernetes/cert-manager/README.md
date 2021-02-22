@@ -18,6 +18,6 @@ Terraform module which install `cert-manager` on Kubernetes, using official Helm
 
 ## Output
 
-### is_ready
+### Is_ready
 
 Endpoint used to synchronize other Terraform resources based on this one. Must be used with `depends_on` field.

@@ -21,6 +21,6 @@ Terraform module which install `cilium` on Kubernetes, using official Helm chart
 
 ## Output
 
-### is_ready
+### Is_ready
 
 Endpoint used to synchronize other Terraform resources based on this one. Must be used with `depends_on` field.

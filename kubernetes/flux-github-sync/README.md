@@ -18,7 +18,7 @@ It will create/deploy:
 - :octocat: `source.toolkit.fluxcd.io/GitRepository`
   - Synchronize the given repository each minutes
 - :rocket: `kustomize.toolkit.fluxcd.io/Kustomization`
-  - Deploy `*.toolkit.fluxcd.io` resources with `kustomize` (don't need the `kustomize.yaml` file)
+  - Deploy `*.toolkit.fluxcd.io` resources with `kustomize` (don’t need the `kustomize.yaml` file)
 
 ## Provisionners
 
@@ -36,6 +36,6 @@ It will create/deploy:
 
 ## Output
 
-### is_ready
+### Is_ready
 
 Endpoint used to synchronize other Terraform resources based on this one. Must be used with `depends_on` field.
