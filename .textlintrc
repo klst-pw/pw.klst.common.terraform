@@ -1,0 +1,20 @@
+{
+  "filters": {},
+  "rules": {
+    "@textlint-rule/no-invalid-control-character": true,
+    "@textlint-rule/no-unmatched-pair": true,
+    "abbr-within-parentheses": true,
+    "apostrophe": true,
+    "common-misspellings": true,
+    "date-weekday-mismatch": true,
+    "diacritics": true,
+    "en-capitalization": true,
+    "footnote-order": true,
+    "no-dead-link": true,
+    "no-empty-section": true,
+    "no-start-duplicated-conjunction": true,
+    "no-todo": true,
+    "period-in-list-item": true,
+    "stop-words": true,
+  }
+}
