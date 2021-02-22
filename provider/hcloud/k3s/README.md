@@ -57,4 +57,4 @@ A ServiceAccount is generated, binded with the given RBAC rules. It can be used 
 A brief summary is available through the `summary` output. It contains:
 - Information about the `VPC`; its *own CIDR* and the addresses of the *nodes*, *pods* and *services* subnets
 - A KLST inventory about theses machines *(an Ansible-like inventory to be used in other modules)*
-- The kubernetes metadata; `annotations`, `labels` and `taints` of each nodes, and the k3s version used to bootstrap this cluster. ***(Be carefull on auto-managed clusters)***
+- The kubernetes metadata; `annotations`, `labels` and `taints` of each nodes, and the k3s version used to bootstrap this cluster. ***(Be careful on auto-managed clusters)***
