@@ -10,6 +10,10 @@
 # ------------------------------------------------------------------------------
 
 locals {
+  nodes_names = [
+    for i in range(length(local.nodes_servers)): substr(sha1(format("node%02d${local.project_name}", count.index + 1))
+  ]
+
   nodes_servers = flatten([for pool, definition in var.node_pools :
     [for _ in range(definition.count) :
       {
@@ -22,7 +26,7 @@ locals {
 resource "hcloud_server" "nodes" {
   count = length(local.nodes_servers)
 
-  name        = format("%s.%s", sha1(format("node%02d", count.index + 1)), local.project_name)
+  name        = local.nodes_names[count.index]
   image       = data.hcloud_image.os.name
   server_type = local.nodes_servers[count.index].instance_type
 
@@ -32,7 +36,7 @@ resource "hcloud_server" "nodes" {
 
   user_data = <<EOT
 #cloud-config
-hostname: ${format("%s.%s", sha1(format("node%02d", count.index + 1)), local.project_name)}
+hostname: ${local.nodes_names[count.index]}
   EOT
 
   labels = {
