@@ -11,7 +11,7 @@
 
 locals {
   nodes_names = [
-    for i in range(length(local.nodes_servers)): substr(sha1(format("node%02d${local.project_name}", count.index + 1))
+    for i in range(length(local.nodes_servers)) : format("%s.%s", substr(sha1(format("node%02d${local.project_name}", i + 1)), 0, 16), local.project_name)
   ]
 
   nodes_servers = flatten([for pool, definition in var.node_pools :

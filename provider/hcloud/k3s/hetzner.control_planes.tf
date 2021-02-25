@@ -11,7 +11,7 @@
 
 locals {
   control_planes_names = [
-    for i in range(var.control_planes.count): substr(sha1(format("cp%02d${local.project_name}", count.index + 1))
+    for i in range(var.control_planes.count) : format("%s.%s", substr(sha1(format("cp%02d${local.project_name}", i + 1)), 0, 16), local.project_name)
   ]
 }
 
