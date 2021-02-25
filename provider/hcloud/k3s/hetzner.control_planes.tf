@@ -9,10 +9,16 @@
 #
 # ------------------------------------------------------------------------------
 
+locals {
+  control_planes_names = [
+    for i in range(var.control_planes.count): substr(sha1(format("cp%02d${local.project_name}", count.index + 1))
+  ]
+}
+
 resource "hcloud_server" "control_planes" {
   count = var.control_planes.count
 
-  name        = format("%s.%s", sha1(format("cp%02d", count.index + 1)), local.project_name)
+  name        = local.control_planes_names[count.index]
   image       = data.hcloud_image.os.name
   server_type = var.control_planes.instance_type
 
@@ -22,7 +28,7 @@ resource "hcloud_server" "control_planes" {
 
   user_data = <<EOT
 #cloud-config
-hostname: ${format("%s.%s", sha1(format("cp%02d", count.index + 1)), local.project_name)}
+hostname: ${local.control_planes_names[count.index]}
   EOT
 
   labels = {
