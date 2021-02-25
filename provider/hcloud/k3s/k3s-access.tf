@@ -126,7 +126,7 @@ resource "kubernetes_cluster_role" "system_boostrap" {
 }
 
 resource "kubernetes_cluster_role_binding" "kube_boostrap" {
-  depends_on = [module.k3s.kubernetes_ready]
+  depends_on = [module.k3s.kubernetes_ready, kubernetes_cluster_role.system_boostrap]
 
   metadata {
     name = "kube:bootstrap"
@@ -152,7 +152,7 @@ resource "kubernetes_cluster_role_binding" "kube_boostrap" {
 }
 
 data "kubernetes_secret" "kube_bootstrap_token" {
-  depends_on = [module.k3s.kubernetes_ready]
+  depends_on = [module.k3s.kubernetes_ready, kubernetes_cluster_role_binding.kube_boostrap]
 
   metadata {
     name      = kubernetes_service_account.kube_bootstrap.default_secret_name
