@@ -23,7 +23,7 @@ resource "helm_release" "cert_manager" {
   }
   set {
     name  = "prometheus.servicemonitor.enabled"
-    value = "true"
+    value = var.enable_monitoring
   }
 }
 
