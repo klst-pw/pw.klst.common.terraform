@@ -15,9 +15,10 @@ Terraform module which install `cert-manager` on Kubernetes, using official Helm
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
 |certmanager_version|Cert-manager chart version|string||yes|
+|enable_monitoring|Enable service monitors **(Prometheus required)**.|bool|true|no|
 
 ## Output
 
-### Is_ready
+### `is_ready`
 
 Endpoint used to synchronize other Terraform resources based on this one. Must be used with `depends_on` field.
