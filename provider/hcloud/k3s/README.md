@@ -42,17 +42,17 @@ Terraform module which creates a kubernetes-light cluster ([k3s](https://k3s.io/
 
 ## Output
 
-### Kubeconfig (`sensitive`)
+### *Kubeconfig (`kubeconfig`)
 
 > **NOTE: do not output this value on production environment**
 
 A kubeconfig for the cluster-root user is generated during the cluster generation and can be accessed through the `kubeconfig` output, formatted in YAML.
 
-### Service Account (`sensitive`)
+### *Service Account (`service_account`)
 
 A ServiceAccount is generated, binded with the given RBAC rules. It can be used by Terraform to provision a fresh new Kubernetes.
 
-### Summary
+### Summary (`summary`)
 
 A brief summary is available through the `summary` output. It contains:
 - Information about the `VPC`; its *own CIDR* and the addresses of the *nodes*, *pods* and *services* subnets
