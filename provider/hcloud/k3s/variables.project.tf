@@ -23,4 +23,5 @@ variable "sub_name" {
 variable "teams" {
   description = "List of teams allowed to manage/access to this project."
   type        = list(string)
+  default     = []
 }
