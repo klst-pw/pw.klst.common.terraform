@@ -85,6 +85,12 @@ locals {
 }
 
 module "k3s" {
+  // NOTE: disable this module ONLY if no control-plane node are 
+  //       defined, which only occurs during destroy processing.
+  //       This "trick" avoid error on destroy due to the k3s 
+  //       module validations (no control-plane available).
+  count = length(local.control_plane_nodes) == 0 ? 0 : 1
+
   source  = "xunleii/k3s/module"
   version = "~>2.2.0"
 

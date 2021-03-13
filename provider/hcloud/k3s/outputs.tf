@@ -11,16 +11,16 @@
 output "kubeconfig" {
   description = "Generated kubeconfig."
   sensitive   = true
-  value       = module.k3s.kube_config
+  value       = try(module.k3s.kube_config, null)
 }
 
 output "service_account" {
   description = "Generated ServiceAccount for cluster bootstrap."
   sensitive   = true
   value = {
-    host                   = module.k3s.kubernetes.api_endpoint
-    cluster_ca_certificate = module.k3s.kubernetes.cluster_ca_certificate
-    token                  = data.kubernetes_secret.kube_bootstrap_token.data.token
+    host                   = try(module.k3s.kubernetes.api_endpoint, null)
+    cluster_ca_certificate = try(module.k3s.kubernetes.cluster_ca_certificate, null)
+    token                  = try(module.bootstrap_rbac.service_account_token, null)
   }
 }
 
@@ -81,6 +81,6 @@ output "summary" {
         })
       }
     }
-    kubernetes = module.k3s.summary
+    kubernetes = try(module.k3s.summary, null)
   }
 }
