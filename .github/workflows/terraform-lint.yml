@@ -35,6 +35,7 @@ jobs:
 
       - name: Terraform - recommended Standard Module Struture
         id: tf_struct
+        if: startsWith(matrix.module, 'docs/') != true
         run: |
           test -f main.tf
           test -f outputs.tf

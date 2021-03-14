@@ -22,6 +22,21 @@ locals {
     "k3s.klst.pw/cluster-name" = local.project_name
     "team.klst.pw/allowed"     = join("_", var.teams)
   }
+
+  k3s_firewall_rules = {
+    control_planes = [
+      { "protocol" : "TCP", "cidr_blocks" : ["0.0.0.0/0", "::/0"], "port_range" : "22" },   // Allow SSH port for everyone
+      { "protocol" : "TCP", "cidr_blocks" : ["0.0.0.0/0", "::/0"], "port_range" : "6443" }, // Allow Kubernetes API port for everyone
+      { "protocol" : "ICMP", "cidr_blocks" : [var.network], "port_range" : null },          // Allow ping between nodes
+      { "protocol" : "TCP", "cidr_blocks" : [var.network], "port_range" : "2379-2380" },    // Allow ETCD for all nodes in the network
+      { "protocol" : "TCP", "cidr_blocks" : [var.network], "port_range" : "10250" },        // Allow Kubelet metric for all nodes in the network
+    ]
+    nodes = [
+      { "protocol" : "ICMP", "cidr_blocks" : [var.network], "port_range" : null },                                                        // Allow ping between nodes
+      { "protocol" : "TCP", "cidr_blocks" : var.control_planes_as_bastion ? [var.network] : ["0.0.0.0/0", "::/0"], "port_range" : "22" }, // Allow SSH port for everyone
+      { "protocol" : "TCP", "cidr_blocks" : [var.network], "port_range" : "10250" },                                                      // Allow Kubelet metric for all nodes in the network
+    ]
+  }
 }
 
 data "hcloud_image" "os" {

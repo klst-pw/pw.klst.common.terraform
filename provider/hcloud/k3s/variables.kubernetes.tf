@@ -27,6 +27,12 @@ variable "k3s_args" {
   default     = []
 }
 
+variable "control_planes_as_bastion" {
+  description = "Use control-plane nodes as bastion."
+  type        = bool
+  default     = false
+}
+
 variable "control_planes" {
   description = "Control-plane nodes definitions."
   type = object({
@@ -37,6 +43,19 @@ variable "control_planes" {
     annotations = optional(map(string))
     labels      = optional(map(string))
     taints      = optional(map(string))
+
+    security_group = optional(object({
+      inbound_rules = optional(list(object({
+        protocol    = optional(string)
+        cidr_blocks = list(string)
+        port_range  = string
+      })))
+      outbound_rules = optional(list(object({
+        protocol    = optional(string)
+        cidr_blocks = list(string)
+        port_range  = string
+      })))
+    }))
   })
 
   validation {
@@ -63,6 +82,19 @@ variable "node_pools" {
     annotations = optional(map(string))
     labels      = optional(map(string))
     taints      = optional(map(string))
+
+    security_group = optional(object({
+      inbound_rules = optional(list(object({
+        protocol    = optional(string)
+        cidr_blocks = list(string)
+        port_range  = string
+      })))
+      outbound_rules = optional(list(object({
+        protocol    = optional(string)
+        cidr_blocks = list(string)
+        port_range  = string
+      })))
+    }))
   }))
   default = {}
 

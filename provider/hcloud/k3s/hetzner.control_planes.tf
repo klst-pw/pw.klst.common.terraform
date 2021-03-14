@@ -26,7 +26,8 @@ resource "hcloud_server" "control_planes" {
   ssh_keys  = local.allowed_ssh_keys
   keep_disk = true
 
-  user_data = <<EOT
+  firewall_ids = [hcloud_firewall.control_planes.id]
+  user_data    = <<EOT
 #cloud-config
 hostname: ${local.control_planes_names[count.index]}
   EOT
@@ -54,4 +55,30 @@ resource "hcloud_rdns" "control_planes" {
   server_id  = hcloud_server.control_planes[count.index].id
   ip_address = hcloud_server.control_planes[count.index].ipv4_address
   dns_ptr    = hcloud_server.control_planes[count.index].name
+}
+
+resource "hcloud_firewall" "control_planes" {
+  name = "control_planes.fw.${local.project_name}"
+
+  // Apply predefined rules for k3s control planes
+  dynamic "rule" {
+    for_each = local.k3s_firewall_rules.control_planes
+    content {
+      direction  = "in"
+      protocol   = lower(rule.value.protocol)
+      source_ips = rule.value.cidr_blocks
+      port       = rule.value.port_range
+    }
+  }
+
+  // Apply user-defined rules for k3s control planes
+  dynamic "rule" {
+    for_each = var.control_planes.security_group != null && var.control_planes.security_group.inbound_rules != null ? var.control_planes.security_group.inbound_rules : []
+    content {
+      direction  = "in"
+      protocol   = rule.value.protocol != null ? lower(rule.value.protocol) : "tcp"
+      source_ips = rule.value.cidr_blocks
+      port       = rule.value.port_range
+    }
+  }
 }

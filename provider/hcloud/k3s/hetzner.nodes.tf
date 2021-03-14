@@ -34,7 +34,8 @@ resource "hcloud_server" "nodes" {
   ssh_keys  = local.allowed_ssh_keys
   keep_disk = true
 
-  user_data = <<EOT
+  firewall_ids = [hcloud_firewall.nodes[local.nodes_servers[count.index].pool_id].id]
+  user_data    = <<EOT
 #cloud-config
 hostname: ${local.nodes_names[count.index]}
   EOT
@@ -63,4 +64,31 @@ resource "hcloud_rdns" "nodes" {
   server_id  = hcloud_server.nodes[count.index].id
   ip_address = hcloud_server.nodes[count.index].ipv4_address
   dns_ptr    = hcloud_server.nodes[count.index].name
+}
+
+resource "hcloud_firewall" "nodes" {
+  for_each = var.node_pools
+  name     = "${each.key}.node_pools.fw.${local.project_name}"
+
+  // Apply predefined rules for k3s nodes
+  dynamic "rule" {
+    for_each = local.k3s_firewall_rules.nodes
+    content {
+      direction  = "in"
+      protocol   = lower(rule.value.protocol)
+      source_ips = rule.value.cidr_blocks
+      port       = rule.value.port_range
+    }
+  }
+
+  // Apply user-defined rules for k3s node pool
+  dynamic "rule" {
+    for_each = each.value.security_group != null && each.value.security_group.inbound_rules != null ? each.value.security_group.inbound_rules : []
+    content {
+      direction  = "in"
+      protocol   = rule.value.protocol != null ? lower(rule.value.protocol) : "tcp"
+      source_ips = rule.value.cidr_blocks
+      port       = rule.value.port_range
+    }
+  }
 }

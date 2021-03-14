@@ -24,6 +24,7 @@ variable "user" {
 variable "network" {
   description = "Hetzner network CIDR."
   type        = string
+  default     = "172.16.1.0/24"
 
   validation {
     condition     = can(cidrsubnets(var.network, 8))
